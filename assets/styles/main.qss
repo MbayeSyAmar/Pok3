@@ -1,0 +1,147 @@
+QWidget {
+    font-family: 'Roboto', sans-serif;
+}
+
+#login-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #0079BF;
+}
+
+#message-label {
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+QPushButton {
+    background-color: #0079BF;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 3px;
+}
+
+QPushButton:hover {
+    background-color: #026AA7;
+}
+
+QLineEdit {
+    border: 1px solid #DFE1E6;
+    border-radius: 3px;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+#main-header {
+    background-color: #026AA7;
+    color: white;
+}
+
+#header-logo {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#board-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#user-info {
+    font-size: 14px;
+}
+
+#logout-button {
+    background-color: #EB5A46;
+}
+
+#logout-button:hover {
+    background-color: #CF513D;
+}
+
+#sidebar {
+    background-color: #F4F5F7;
+    border-right: 1px solid #DFE1E6;
+}
+
+#sidebar-title {
+    font-size: 16px;
+    font-weight: bold;
+    padding: 16px;
+    background-color: #E4E6EA;
+}
+
+#sidebar-button {
+    text-align: left;
+    padding: 12px 16px;
+    background-color: transparent;
+    color: #172B4D;
+}
+
+#sidebar-button:hover {
+    background-color: #E4E6EA;
+}
+
+#board-card {
+    background-color: white;
+    border-radius: 3px;
+    box-shadow: 0 1px 0 rgba(9,30,66,.25);
+}
+
+#board-card-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 8px;
+}
+
+#create-board-button {
+    font-size: 16px;
+    padding: 32px 16px;
+    background-color: #F0F2F5;
+    color: #172B4D;
+}
+
+#create-board-button:hover {
+    background-color: #EBECF0;
+}
+
+#list-widget {
+    background-color: #EBECF0;
+    border-radius: 3px;
+}
+
+#list-title {
+    font-size: 14px;
+    font-weight: bold;
+    padding: 8px;
+}
+
+#add-card-button {
+    background-color: transparent;
+    color: #5E6C84;
+    text-align: left;
+}
+
+#add-card-button:hover {
+    background-color: #DFE1E6;
+    color: #172B4D;
+}
+
+#card-widget {
+    background-color: white;
+    border-radius: 3px;
+    box-shadow: 0 1px 0 rgba(9,30,66,.25);
+    margin-bottom: 8px;
+}
+
+#edit-card-button {
+    background-color: #F4F5F7;
+    color: #172B4D;
+}
+
+#edit-card-button:hover {
+    background-color: #EBECF0;
+}
+
