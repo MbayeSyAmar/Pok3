@@ -32,4 +32,3 @@ class BoardCard(QWidget):
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
             self.clicked.emit(self.board_id, self.title)
-
