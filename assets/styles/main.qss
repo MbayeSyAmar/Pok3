@@ -1,147 +1,346 @@
+/* Palette de couleurs professionnelle */
+/*
+  Fond principal: #1E1E1E
+  Fond secondaire: #252525
+  Accent primaire: #7C4DFF
+  Accent secondaire: #00B8D4
+  Cartes: #2D2D2D
+  Listes: #333333
+  Texte: #FFFFFF
+  Texte secondaire: #B3B3B3
+  Bordures: #404040
+*/
+
 QWidget {
+    background-color: #1E1E1E;
+    color: #FFFFFF;
     font-family: 'Roboto', sans-serif;
 }
 
-#login-title {
-    font-size: 24px;
-    font-weight: bold;
-    color: #0079BF;
-}
-
-#message-label {
-    font-size: 14px;
-    margin-top: 10px;
-}
-
-QPushButton {
-    background-color: #0079BF;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 3px;
-}
-
-QPushButton:hover {
-    background-color: #026AA7;
-}
-
-QLineEdit {
-    border: 1px solid #DFE1E6;
-    border-radius: 3px;
-    padding: 8px;
-    margin-bottom: 10px;
-}
-
+/* Header */
 #main-header {
-    background-color: #026AA7;
-    color: white;
+    background-color: #252525;
+    border-bottom: 1px solid #404040;
+    padding: 10px;
 }
 
 #header-logo {
-    font-size: 20px;
+    font-size: 24px;
     font-weight: bold;
+    color: #FFFFFF;
 }
 
-#board-title {
-    font-size: 18px;
-    font-weight: bold;
-}
-
-#user-info {
+/* Boutons uniformisés */
+QPushButton {
+    background-color: #7C4DFF;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 500;
     font-size: 14px;
 }
 
+QPushButton:hover {
+    background-color: #9575FF;
+}
+
+QPushButton:pressed {
+    background-color: #651FFF;
+}
+
+/* Boutons spéciaux */
+#add-list-button, #add-card-button {
+    background-color: rgba(124, 77, 255, 0.1);
+    color: #7C4DFF;
+    text-align: left;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+#add-list-button:hover, #add-card-button:hover {
+    background-color: rgba(124, 77, 255, 0.2);
+}
+
 #logout-button {
-    background-color: #EB5A46;
+    background-color: #FF4081;
 }
 
 #logout-button:hover {
-    background-color: #CF513D;
+    background-color: #FF80AB;
 }
 
+/* Sidebar améliorée */
 #sidebar {
-    background-color: #F4F5F7;
-    border-right: 1px solid #DFE1E6;
+    background-color: #252525;
+    border-right: 1px solid #404040;
+    min-width: 260px;
+    max-width: 260px;
 }
 
 #sidebar-title {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
-    padding: 16px;
-    background-color: #E4E6EA;
+    padding: 20px;
+    background-color: #1E1E1E;
+    color: #FFFFFF;
 }
 
 #sidebar-button {
     text-align: left;
-    padding: 12px 16px;
+    padding: 12px 20px;
     background-color: transparent;
-    color: #172B4D;
+    color: #FFFFFF;
+    border-radius: 0;
+    font-size: 14px;
+    margin: 2px 0;
 }
 
 #sidebar-button:hover {
-    background-color: #E4E6EA;
+    background-color: #333333;
 }
 
-#board-card {
-    background-color: white;
-    border-radius: 3px;
-    box-shadow: 0 1px 0 rgba(9,30,66,.25);
-}
-
-#board-card-title {
-    font-size: 16px;
-    font-weight: bold;
+#sidebar-button:checked {
+    background-color: #7C4DFF;
     color: white;
-    background-color: rgba(0, 0, 0, 0.4);
-    padding: 8px;
 }
 
-#create-board-button {
-    font-size: 16px;
-    padding: 32px 16px;
-    background-color: #F0F2F5;
-    color: #172B4D;
-}
-
-#create-board-button:hover {
-    background-color: #EBECF0;
-}
-
+/* Listes */
 #list-widget {
-    background-color: #EBECF0;
-    border-radius: 3px;
+    background-color: #333333;
+    border-radius: 8px;
+    min-width: 280px;
+    max-width: 280px;
+    margin: 0 8px;
+    padding: 8px;
 }
 
 #list-title {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
     padding: 8px;
-}
-
-#add-card-button {
+    color: #FFFFFF;
     background-color: transparent;
-    color: #5E6C84;
-    text-align: left;
+    border-radius: 4px;
 }
 
-#add-card-button:hover {
-    background-color: #DFE1E6;
-    color: #172B4D;
-}
-
+/* Cartes */
 #card-widget {
-    background-color: white;
-    border-radius: 3px;
-    box-shadow: 0 1px 0 rgba(9,30,66,.25);
+    background-color: #2D2D2D;
+    border-radius: 6px;
+    margin: 8px 4px;
+    padding: 12px;
+}
+
+#card-widget:hover {
+    background-color: #363636;
+    transform: translateY(-1px);
+}
+
+#card-widget-title {
+    font-weight: 500;
+    color: #FFFFFF;
+    font-size: 14px;
+}
+
+#card-widget-due-date {
+    font-size: 12px;
+    color: #FF80AB;
+    margin-top: 8px;
+}
+
+/* Labels */
+#card-label {
+    border-radius: 12px;
+    padding: 4px 8px;
+    font-size: 12px;
+    color: white;
+    margin-right: 4px;
     margin-bottom: 8px;
 }
 
-#edit-card-button {
-    background-color: #F4F5F7;
-    color: #172B4D;
+/* Notifications */
+#notification-panel {
+    background-color: #252525;
+    border-radius: 8px;
+    border: 1px solid #404040;
+    margin: 16px;
 }
 
-#edit-card-button:hover {
-    background-color: #EBECF0;
+#notification-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #FFFFFF;
+    padding: 16px;
+    border-bottom: 1px solid #404040;
+}
+
+#notification-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid #404040;
+    background-color: transparent;
+}
+
+#notification-item:hover {
+    background-color: #2D2D2D;
+}
+
+#notification-text {
+    color: #FFFFFF;
+}
+
+#notification-time {
+    color: #B3B3B3;
+    font-size: 12px;
+}
+
+/* Today's Projects */
+#today-projects-panel {
+    background-color: #252525;
+    border-radius: 8px;
+    border: 1px solid #404040;
+    margin: 16px;
+    padding: 16px;
+}
+
+#today-projects-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #FFFFFF;
+    margin-bottom: 16px;
+}
+
+#today-project-item {
+    background-color: #2D2D2D;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 8px;
+}
+
+#today-project-item:hover {
+    background-color: #363636;
+}
+
+/* Inputs */
+QLineEdit, QTextEdit {
+    background-color: #2D2D2D;
+    border: 1px solid #404040;
+    border-radius: 4px;
+    padding: 8px;
+    color: #FFFFFF;
+}
+
+QLineEdit:focus, QTextEdit:focus {
+    border: 1px solid #7C4DFF;
+    background-color: #363636;
+}
+
+/* Scrollbars */
+QScrollBar:vertical {
+    border: none;
+    background: #252525;
+    width: 8px;
+    margin: 0;
+}
+
+QScrollBar::handle:vertical {
+    background: #404040;
+    border-radius: 4px;
+    min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #4D4D4D;
+}
+
+QScrollBar:horizontal {
+    border: none;
+    background: #252525;
+    height: 8px;
+    margin: 0;
+}
+
+QScrollBar::handle:horizontal {
+    background: #404040;
+    border-radius: 4px;
+    min-width: 20px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: #4D4D4D;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical,
+QScrollBar::add-line:horizontal,
+QScrollBar::sub-line:horizontal {
+    border: none;
+    background: none;
+}
+
+/* Dialog */
+QDialog {
+    background-color: #252525;
+}
+
+QDialog QPushButton {
+    min-width: 80px;
+}
+
+/* Calendar */
+QCalendarWidget {
+    background-color: #252525;
+}
+
+QCalendarWidget QToolButton {
+    color: #FFFFFF;
+    background-color: transparent;
+}
+
+QCalendarWidget QMenu {
+    background-color: #2D2D2D;
+    border: 1px solid #404040;
+}
+
+QCalendarWidget QSpinBox {
+    background-color: #2D2D2D;
+    border: 1px solid #404040;
+    border-radius: 4px;
+    color: #FFFFFF;
+}
+
+QCalendarWidget QAbstractItemView:enabled {
+    background-color: #2D2D2D;
+    color: #FFFFFF;
+    selection-background-color: #7C4DFF;
+    selection-color: #FFFFFF;
+}
+
+QCalendarWidget QAbstractItemView:disabled {
+    color: #666666;
+}
+
+/* Menus */
+QMenu {
+    background-color: #2D2D2D;
+    border: 1px solid #404040;
+}
+
+QMenu::item {
+    padding: 8px 24px;
+    color: #FFFFFF;
+}
+
+QMenu::item:selected {
+    background-color: #7C4DFF;
+}
+
+/* Messages */
+QMessageBox {
+    background-color: #252525;
+}
+
+QMessageBox QPushButton {
+    min-width: 100px;
 }
 

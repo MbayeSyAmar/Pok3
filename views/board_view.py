@@ -32,7 +32,8 @@ class BoardView(QWidget):
         
         self.scroll_content = QWidget()
         self.scroll_layout = QHBoxLayout(self.scroll_content)
-        self.scroll_layout.setSpacing(10)
+        self.scroll_layout.setSpacing(15)
+        self.scroll_layout.setContentsMargins(15, 15, 15, 15)
         self.scroll_layout.setAlignment(Qt.AlignLeft)
         
         self.scroll_area.setWidget(self.scroll_content)
@@ -48,6 +49,7 @@ class BoardView(QWidget):
         lists = self.db.get_lists(board_id)
         for list_data in lists:
             list_widget = ListWidget(list_data['id'], list_data['title'], self.db)
+            list_widget.card_moved.connect(self.on_card_moved)
             self.lists.append(list_widget)
             self.scroll_layout.addWidget(list_widget)
         
@@ -67,6 +69,12 @@ class BoardView(QWidget):
         if ok and title:
             new_list_id = self.db.create_list(title, len(self.lists), self.current_board_id)
             new_list = ListWidget(new_list_id, title, self.db)
+            new_list.card_moved.connect(self.on_card_moved)
             self.lists.append(new_list)
             self.scroll_layout.insertWidget(self.scroll_layout.count() - 1, new_list)
+            
+    def on_card_moved(self, card_id, new_list_id):
+        # Recharger toutes les listes pour refléter les changements
+        for list_widget in self.lists:
+            list_widget.load_cards()
 

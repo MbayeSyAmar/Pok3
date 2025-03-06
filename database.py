@@ -7,136 +7,149 @@ class Database(QObject):
 
     def __init__(self):
         super().__init__()
-        self.conn = sqlite3.connect('pytrello.db')
-        self.conn.row_factory = sqlite3.Row
+        self.conn = None
+        self.connect()
 
-    def create_tables(self):
-        cursor = self.conn.cursor()
-        
-        cursor.execute('''
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY,
-            username TEXT UNIQUE NOT NULL,
-            password TEXT NOT NULL,
-            email TEXT UNIQUE NOT NULL
-        )
-        ''')
-        
-        cursor.execute('''
-        CREATE TABLE IF NOT EXISTS boards (
-            id INTEGER PRIMARY KEY,
-            title TEXT NOT NULL,
-            background TEXT,
-            user_id INTEGER,
-            FOREIGN KEY (user_id) REFERENCES users (id)
-        )
-        ''')
-        
-        cursor.execute('''
-        CREATE TABLE IF NOT EXISTS lists (
-            id INTEGER PRIMARY KEY,
-            title TEXT NOT NULL,
-            position INTEGER,
-            board_id INTEGER,
-            FOREIGN KEY (board_id) REFERENCES boards (id)
-        )
-        ''')
-        
-        cursor.execute('''
-        CREATE TABLE IF NOT EXISTS cards (
-            id INTEGER PRIMARY KEY,
-            title TEXT NOT NULL,
-            description TEXT,
-            position INTEGER,
-            due_date TEXT,
-            list_id INTEGER,
-            FOREIGN KEY (list_id) REFERENCES lists (id)
-        )
-        ''')
-        
-        cursor.execute('''
-        CREATE TABLE IF NOT EXISTS labels (
-            id INTEGER PRIMARY KEY,
-            name TEXT NOT NULL,
-            color TEXT NOT NULL,
-            board_id INTEGER,
-            FOREIGN KEY (board_id) REFERENCES boards (id)
-        )
-        ''')
-        
-        cursor.execute('''
-        CREATE TABLE IF NOT EXISTS card_labels (
-            card_id INTEGER,
-            label_id INTEGER,
-            FOREIGN KEY (card_id) REFERENCES cards (id),
-            FOREIGN KEY (label_id) REFERENCES labels (id),
-            PRIMARY KEY (card_id, label_id)
-        )
-        ''')
-        
-        cursor.execute('''
-        CREATE TABLE IF NOT EXISTS checklists (
-            id INTEGER PRIMARY KEY,
-            title TEXT NOT NULL,
-            card_id INTEGER,
-            FOREIGN KEY (card_id) REFERENCES cards (id)
-        )
-        ''')
-        
-        cursor.execute('''
-        CREATE TABLE IF NOT EXISTS checklist_items (
-            id INTEGER PRIMARY KEY,
-            content TEXT NOT NULL,
-            is_checked BOOLEAN,
-            position INTEGER,
-            checklist_id INTEGER,
-            FOREIGN KEY (checklist_id) REFERENCES checklists (id)
-        )
-        ''')
-        
-        cursor.execute('''
-        CREATE TABLE IF NOT EXISTS attachments (
-            id INTEGER PRIMARY KEY,
-            filename TEXT NOT NULL,
-            file_path TEXT NOT NULL,
-            uploaded_at TEXT NOT NULL,
-            card_id INTEGER,
-            FOREIGN KEY (card_id) REFERENCES cards (id)
-        )
-        ''')
-        
-        self.conn.commit()
+    def connect(self):
+        """Établit la connexion à la base de données"""
+        try:
+            self.conn = sqlite3.connect('pytrello.db', check_same_thread=False)
+            self.conn.row_factory = sqlite3.Row
+        except sqlite3.Error as e:
+            print(f"Erreur de connexion à la base de données: {e}")
 
     def execute_query(self, query, params=None):
-        cursor = self.conn.cursor()
-        if params:
-            cursor.execute(query, params)
-        else:
-            cursor.execute(query)
-        self.conn.commit()
-        return cursor
+        """Exécute une requête SQL avec gestion des erreurs et reconnexion"""
+        try:
+            if not self.conn:
+                self.connect()
+            
+            cursor = self.conn.cursor()
+            if params:
+                cursor.execute(query, params)
+            else:
+                cursor.execute(query)
+            
+            self.conn.commit()
+            return cursor
+        except sqlite3.Error as e:
+            print(f"Erreur lors de l'exécution de la requête: {e}")
+            # Tentative de reconnexion
+            self.connect()
+            return None
 
-    # User methods
+    def create_tables(self):
+        """Crée les tables de la base de données"""
+        queries = [
+            '''CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY,
+                username TEXT UNIQUE NOT NULL,
+                password TEXT NOT NULL,
+                email TEXT UNIQUE NOT NULL
+            )''',
+            '''CREATE TABLE IF NOT EXISTS boards (
+                id INTEGER PRIMARY KEY,
+                title TEXT NOT NULL,
+                background TEXT,
+                user_id INTEGER,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users (id)
+            )''',
+            '''CREATE TABLE IF NOT EXISTS lists (
+                id INTEGER PRIMARY KEY,
+                title TEXT NOT NULL,
+                position INTEGER,
+                board_id INTEGER,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (board_id) REFERENCES boards (id)
+            )''',
+            '''CREATE TABLE IF NOT EXISTS cards (
+                id INTEGER PRIMARY KEY,
+                title TEXT NOT NULL,
+                description TEXT,
+                position INTEGER,
+                due_date TEXT,
+                list_id INTEGER,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (list_id) REFERENCES lists (id)
+            )''',
+            '''CREATE TABLE IF NOT EXISTS labels (
+                id INTEGER PRIMARY KEY,
+                name TEXT NOT NULL,
+                color TEXT NOT NULL,
+                board_id INTEGER,
+                FOREIGN KEY (board_id) REFERENCES boards (id)
+            )''',
+            '''CREATE TABLE IF NOT EXISTS card_labels (
+                card_id INTEGER,
+                label_id INTEGER,
+                FOREIGN KEY (card_id) REFERENCES cards (id),
+                FOREIGN KEY (label_id) REFERENCES labels (id),
+                PRIMARY KEY (card_id, label_id)
+            )''',
+            '''CREATE TABLE IF NOT EXISTS checklists (
+                id INTEGER PRIMARY KEY,
+                title TEXT NOT NULL,
+                card_id INTEGER,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (card_id) REFERENCES cards (id)
+            )''',
+            '''CREATE TABLE IF NOT EXISTS checklist_items (
+                id INTEGER PRIMARY KEY,
+                content TEXT NOT NULL,
+                is_checked BOOLEAN DEFAULT 0,
+                position INTEGER,
+                checklist_id INTEGER,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (checklist_id) REFERENCES checklists (id)
+            )''',
+            '''CREATE TABLE IF NOT EXISTS attachments (
+                id INTEGER PRIMARY KEY,
+                filename TEXT NOT NULL,
+                file_path TEXT NOT NULL,
+                uploaded_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                card_id INTEGER,
+                FOREIGN KEY (card_id) REFERENCES cards (id)
+            )'''
+        ]
+        
+        for query in queries:
+            self.execute_query(query)
+
     def create_user(self, username, password, email):
+        """Crée un nouvel utilisateur"""
         query = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)"
-        self.execute_query(query, (username, password, email))
-        self.data_changed.emit()
-        return self.execute_query("SELECT last_insert_rowid()").fetchone()[0]
+        cursor = self.execute_query(query, (username, password, email))
+        if cursor:
+            self.data_changed.emit()
+            return cursor.lastrowid
+        return None
 
     def get_user(self, username):
+        """Récupère un utilisateur par son nom d'utilisateur"""
         query = "SELECT * FROM users WHERE username = ?"
-        return self.execute_query(query, (username,)).fetchone()
+        cursor = self.execute_query(query, (username,))
+        if cursor:
+            return cursor.fetchone()
+        return None
 
     # Board methods
     def create_board(self, title, background, user_id):
+        """Crée un nouveau tableau"""
         query = "INSERT INTO boards (title, background, user_id) VALUES (?, ?, ?)"
-        self.execute_query(query, (title, background, user_id))
-        self.data_changed.emit()
-        return self.execute_query("SELECT last_insert_rowid()").fetchone()[0]
+        cursor = self.execute_query(query, (title, background, user_id))
+        if cursor:
+            self.data_changed.emit()
+            return cursor.lastrowid
+        return None
 
     def get_boards(self, user_id):
-        query = "SELECT * FROM boards WHERE user_id = ?"
-        return self.execute_query(query, (user_id,)).fetchall()
+        """Récupère tous les tableaux d'un utilisateur"""
+        query = "SELECT * FROM boards WHERE user_id = ? ORDER BY created_at DESC"
+        cursor = self.execute_query(query, (user_id,))
+        if cursor:
+            return cursor.fetchall()
+        return []
 
     def update_board(self, board_id, title, background):
         query = "UPDATE boards SET title = ?, background = ? WHERE id = ?"
@@ -160,14 +173,21 @@ class Database(QObject):
 
     # List methods
     def create_list(self, title, position, board_id):
+        """Crée une nouvelle liste"""
         query = "INSERT INTO lists (title, position, board_id) VALUES (?, ?, ?)"
-        self.execute_query(query, (title, position, board_id))
-        self.data_changed.emit()
-        return self.execute_query("SELECT last_insert_rowid()").fetchone()[0]
+        cursor = self.execute_query(query, (title, position, board_id))
+        if cursor:
+            self.data_changed.emit()
+            return cursor.lastrowid
+        return None
 
     def get_lists(self, board_id):
+        """Récupère toutes les listes d'un tableau"""
         query = "SELECT * FROM lists WHERE board_id = ? ORDER BY position"
-        return self.execute_query(query, (board_id,)).fetchall()
+        cursor = self.execute_query(query, (board_id,))
+        if cursor:
+            return cursor.fetchall()
+        return []
 
     def update_list(self, list_id, title, position):
         query = "UPDATE lists SET title = ?, position = ? WHERE id = ?"
@@ -189,14 +209,24 @@ class Database(QObject):
 
     # Card methods
     def create_card(self, title, description, position, due_date, list_id):
-        query = "INSERT INTO cards (title, description, position, due_date, list_id) VALUES (?, ?, ?, ?, ?)"
-        self.execute_query(query, (title, description, position, due_date, list_id))
-        self.data_changed.emit()
-        return self.execute_query("SELECT last_insert_rowid()").fetchone()[0]
+        """Crée une nouvelle carte"""
+        query = """
+        INSERT INTO cards (title, description, position, due_date, list_id)
+        VALUES (?, ?, ?, ?, ?)
+        """
+        cursor = self.execute_query(query, (title, description, position, due_date, list_id))
+        if cursor:
+            self.data_changed.emit()
+            return cursor.lastrowid
+        return None
 
     def get_cards(self, list_id):
+        """Récupère toutes les cartes d'une liste"""
         query = "SELECT * FROM cards WHERE list_id = ? ORDER BY position"
-        return self.execute_query(query, (list_id,)).fetchall()
+        cursor = self.execute_query(query, (list_id,))
+        if cursor:
+            return cursor.fetchall()
+        return []
 
     def get_card(self, card_id):
         query = "SELECT * FROM cards WHERE id = ?"
@@ -327,12 +357,22 @@ class Database(QObject):
 
     # Task methods for calendar and timeline views
     def get_user_tasks(self, user_id):
+        """Récupère toutes les tâches d'un utilisateur"""
         query = """
-        SELECT c.id, c.title, c.description, c.due_date, b.title as board_title, l.title as list_title
+        SELECT c.*, b.title as board_title, l.title as list_title
         FROM cards c
         JOIN lists l ON c.list_id = l.id
         JOIN boards b ON l.board_id = b.id
         WHERE b.user_id = ? AND c.due_date IS NOT NULL
         ORDER BY c.due_date
         """
-        return self.execute_query(query, (user_id,)).fetchall()
+        cursor = self.execute_query(query, (user_id,))
+        if cursor:
+            return cursor.fetchall()
+        return []
+
+    def __del__(self):
+        """Ferme la connexion à la base de données"""
+        if self.conn:
+            self.conn.close()
+

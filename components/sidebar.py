@@ -1,5 +1,4 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLabel
-from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import pyqtSignal
 
 class Sidebar(QWidget):
@@ -20,17 +19,17 @@ class Sidebar(QWidget):
         title.setObjectName("sidebar-title")
         layout.addWidget(title)
 
-        boards_button = QPushButton(QIcon("assets/icons/boards.png"), "Tableaux")
+        boards_button = QPushButton("📋  Tableaux")  # Ajout d'espaces après l'emoji
         boards_button.setObjectName("sidebar-button")
         boards_button.clicked.connect(self.show_boards_requested.emit)
         layout.addWidget(boards_button)
 
-        calendar_button = QPushButton(QIcon("assets/icons/calendar.png"), "Calendrier")
+        calendar_button = QPushButton("📅  Calendrier")
         calendar_button.setObjectName("sidebar-button")
         calendar_button.clicked.connect(self.show_calendar_requested.emit)
         layout.addWidget(calendar_button)
 
-        timeline_button = QPushButton(QIcon("assets/icons/timeline.png"), "Chronologie")
+        timeline_button = QPushButton("⏱️  Chronologie")
         timeline_button.setObjectName("sidebar-button")
         timeline_button.clicked.connect(self.show_timeline_requested.emit)
         layout.addWidget(timeline_button)
@@ -39,5 +38,4 @@ class Sidebar(QWidget):
 
         self.setLayout(layout)
         self.setObjectName("sidebar")
-        self.setFixedWidth(250)
 

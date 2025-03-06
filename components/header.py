@@ -1,9 +1,9 @@
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QLabel
-from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import pyqtSignal
 
 class Header(QWidget):
     logout_requested = pyqtSignal()
+    notification_requested = pyqtSignal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -13,12 +13,12 @@ class Header(QWidget):
         layout = QHBoxLayout()
         layout.setContentsMargins(10, 5, 10, 5)
 
-        menu_button = QPushButton(QIcon("assets/icons/menu.png"), "")
+        menu_button = QPushButton("☰")  # Menu hamburger plus visible
         menu_button.setObjectName("menu-button")
         menu_button.clicked.connect(self.parent().toggle_sidebar)
         layout.addWidget(menu_button)
 
-        logo = QLabel("PyTache")
+        logo = QLabel("PyTrello")
         logo.setObjectName("header-logo")
         layout.addWidget(logo)
 
@@ -29,6 +29,11 @@ class Header(QWidget):
         layout.addWidget(self.board_title)
 
         layout.addStretch()
+
+        notification_button = QPushButton("🔔")  # Cloche plus visible
+        notification_button.setObjectName("notification-button")
+        notification_button.clicked.connect(self.notification_requested.emit)
+        layout.addWidget(notification_button)
 
         self.user_info = QLabel()
         self.user_info.setObjectName("user-info")
@@ -41,6 +46,7 @@ class Header(QWidget):
 
         self.setLayout(layout)
         self.setObjectName("main-header")
+
 
     def update_user_info(self, username):
         self.user_info.setText(f"Connecté en tant que : {username}")
