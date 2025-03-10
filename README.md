@@ -2,7 +2,7 @@
 
 ## 1. PRÉSENTATION GÉNÉRALE
 
-PyTrello est un clone de Trello développé en Python avec PyQt5, offrant une interface graphique complète pour la gestion de projets selon la méthode Kanban. Cette application permet aux utilisateurs de créer des tableaux, des listes et des cartes pour organiser leurs tâches, avec des fonctionnalités avancées comme le glisser-déposer, les étiquettes, les checklists, et la gestion des dates d'échéance.
+PyTrello est comme Trello développé en Python avec PyQt5, avec une interface graphique complète pour la gestion de projets selon la méthode Kanban. Cette application permet aux utilisateurs de créer des tableaux, des listes et des cartes pour organiser leurs tâches, avec des fonctionnalités avancées comme le glisser-déposer, les étiquettes, les checklists, et la gestion des dates d'échéance.
 
 ## 2. ARCHITECTURE DU PROJET
 
