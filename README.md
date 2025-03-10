@@ -181,7 +181,6 @@ Les choix de design et d'interface ont été guidés par les besoins des utilisa
 - Migration vers PyQt6 ou PySide6
 - Optimisation des performances pour les grands tableaux
 - Tests automatisés
-- Documentation complète du code
 - Packaging pour différentes plateformes
 
 ## 9. CONCLUSION
